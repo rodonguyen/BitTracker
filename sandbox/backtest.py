@@ -6,9 +6,8 @@ import pandas, numpy, time
 import supertrend_bot
 # pandas.set_option('display.max_rows', None)
 
-marking_timestamp = int(time.time()%1000)
 
-# BACKTEST
+
 class ResultRecorder:
     def __init__(self):
         self.profit_and_loss_dict = {'profit': [], 'loss': []}
@@ -16,6 +15,7 @@ class ResultRecorder:
         #                     'no_of_orders', 'profit_order', 'average_profit', 'loss_order', 'average_loss']
         self.results = pandas.DataFrame()
         self.order_number = 0
+        self.marking_timestamp = int(time.time()%1000)
 
     def add_profit_loss(self, amount):
         if amount <= 0: self.profit_and_loss_dict['loss'].append(amount)
@@ -25,7 +25,9 @@ class ResultRecorder:
     def add_new_row(self, row_data):
         self.results = pandas.concat([self.results, pandas.DataFrame([row_data])])
 
-    def save_in_csv(self, name=f"sandbox/backtest_result/results_summary_{marking_timestamp}.csv"):
+    def save_in_csv(self, name=None):
+        if name == None: 
+            name = f"sandbox/backtest_result/backtest_summary_{self.marking_timestamp}.csv"
         self.results.to_csv(name, index=False, index_label=False)
 
     def get_profit_order_number(self):
@@ -47,7 +49,7 @@ class ResultRecorder:
         self.order_number = 0
 
 
-def run_back_test(length, multiplier, coin=None, timeframe=None, df=None):
+def backtest(length, multiplier, result_recorder, df=None, coin=None, timeframe=None):
     # Define config for bot
     bot = supertrend_bot.SupertrendBot(
                     account='',
@@ -120,19 +122,17 @@ def run_back_test(length, multiplier, coin=None, timeframe=None, df=None):
 
 
 
-
-
 result_recorder = ResultRecorder()
 
 def main():
     trend = '_bear'
     coins = ('ada', 'btc', 'doge', 'eth', 'matic', 'sol', 'trx', 'xrp')
     timeframes = ('15m', '1h', '4h');  length_in_days = (1/24/4, 1/24, 1/6)
-    config_lengths = numpy.arange(4, 19, 1)
-    config_multipliers = numpy.arange(4, 20.5, 0.5)
+    config_lengths = numpy.arange(11, 28, 1)
+    config_multipliers = numpy.arange(15, 30, 0.5)
 
     coins = ('btc',) # 'sol',) # 'btc', 'doge', 'eth',  'trx', 'xrp')
-    timeframes = ('15m', );  length_in_days = (1/24/4, )
+    timeframes = ('1h', );  length_in_days = (1/24, )
     # config_lengths = (8,9,)
     # config_multipliers = (18,)
     trend = ''
@@ -140,9 +140,14 @@ def main():
     for coin in coins:
         print('\n'+'='*50)
         print('coin =', coin)
+        backtest(coin, timeframes, length_in_days, config_lengths, config_multipliers, 
+                trend=trend,
+                savefilename=None)
         for timeframe, length_in_day in zip(timeframes, length_in_days):
             print('timeframe =', timeframe)
             df = pandas.read_csv(f"sandbox/historical_data/{coin}_{timeframe}_original{trend}.csv")
+
+            # Rename columns and drop some to reduce memory weight
             df['timestamp'] = df['time_period_start']
             df['open'] = df['price_open']
             df['high'] = df['price_high']
@@ -159,7 +164,7 @@ def main():
                 for multiplier in config_multipliers:
                     print('multiplier =', multiplier, end=' ')
 
-                    supertrend_data, balance = run_back_test(length, multiplier, df=df)
+                    supertrend_data, balance = backtest(length, multiplier, df=df)
                     
                     result_recorder.add_new_row({
                         'coinpair': coin,
@@ -178,12 +183,11 @@ def main():
                     })
                     ## Save trade history
                     # supertrend_data.to_csv(f"sandbox/backtest_result/{coin}_{timeframe}.csv", index=False, index_label=False)
-                    result_recorder.reset_stats()
                     result_recorder.save_in_csv()
+                    result_recorder.reset_stats()
                 print()
 
-main()
+# main()
 
-# TODO:
-# - P/L Distribution graphs
+
 

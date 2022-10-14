@@ -1,6 +1,6 @@
-# supertrend-bot
+# BitTracker
 
-Supertrend bot using python (pandas and ccxt).  
+A trading bot utilising SuperTrend Algorithm.
 
 At its core, the Supertrend calculates an upperbound and lower bound and use them as threshold to buy/sell. Due to the trending nature of cryptocurrency, trailing stop for orders is analysed (by me) and proved to be suitable and bring great profit (great enough to cancel out multiple lost trades). 
 
@@ -20,7 +20,7 @@ An example of a bot is [`bot_matic.py`](/bot_matic.py).
 
 
 ## Notes in implemetation
-- Filled position is different from calculated position (e.g. position = lot / price). It's safer to update position from exected order's returned result. Good for trade log and avoid getting error for selling more than what you actually bought.
+- Filled position is different from calculated position (e.g. position = lot / price). It's safer to update position from executed order's returned result. Good for trade log and avoid getting error for selling more than what you actually bought.
 - Exchange requires >1 second or much more to update its prices. So if you request prices miliseconds right after the candle closes, you WILL NOT get the latest price candle (latest price row). [Read more here.](https://docs.ccxt.com/en/latest/manual.html#notes-on-latency)
 - Choosing the optimal configuration when trading on small timeframe (e.g. 15m) require large historical data. Because 1000 data points of 15m timeframe only covers ~10 days, which is very bias (specifically, what if it's downtrend during that period)
 
@@ -44,24 +44,28 @@ Week 4 (29/8/2022):
 - Use larger historical data to find optimal configuration https://docs.coinapi.io/#limits
 
 Week 5 (05/09/2022)
-- 📍 Get top10 config, average loss, % config loss
-- Split bull/bear data, choose best config from overall, test on bull/bear
+- Get top10 config, average loss, % config loss
+- Plot balance vs config; pnl distribution of top10
 
-Week  ()
-- Plot chart for further insights: https://dygraphs.com/ + JS
-- More buttons and inputs to operate bot from browser
+Week 39 / 2022:
+- Choose 10 configs that are in toplist config and have the highest balance: Check [`sandbox/backtest_result/best_configs_backtest_btc.csv`](sandbox/backtest_result/best_configs_backtest_btc.csv)
+- Analyse BitTracker performance in bear/recent-year periods on BTC/USD with best configs found: Risk is pretty large (max -90%) in a bear market, but acceptable compared to the profit in a bull market (+200%)
 
-Week  ()
-- Code ND estimator
-- Code trade logic for ND+Supertrend
-- Backtest, analyse 
+Week 40 / 2022:
+- 📍 Quickly re-evaluate altcoins on bear market (make sure it’s bear)
+- Display backtest on chart on Web App using https://dygraphs.com/ + JS
+- Re-plan final product (what functionalities, features is it going to have?)
 
-
-In queue:
-- ALGO: Write buy/sell logic: Set order when RSI escaped overbought>75/oversold<25 (threshold) zone, TP/SL: half if move x amount (if touch TP, set SL to entry), half if touch the opposite threshold
+Future:
+- Calculate risk-adjusted return [https://www.investopedia.com/terms/r/riskadjustedreturn.asp](https://www.investopedia.com/terms/r/riskadjustedreturn.asp)
+- More buttons and inputs to operate bot from web app
+- ALGO: Code Nadaraya-Watson estimator + Try trade logic for Nadaraya-Watson + Supertrend
 - ALGO: Use deep learning (e.g., LSTM) 
-- Alarm for every execution
+- Alarm for every execution 
 
+## Dependencies
+- Pandas
+- CCXT
 
 ## Others
 - Price API: https://messari.io/api/docs
@@ -80,14 +84,3 @@ In queue:
 - https://towardsdatascience.com/machine-learning-for-day-trading-27c08274df54
 - https://www.mdpi.com/2673-2688/2/4/30/htm
 
-
-
-<!-- 
-## Notes
-Profit from $100
-- 1000 datapoints of 5m time-frame cover 3.6 days => $12
-- 1000 datapoints of 15m ............... 10 days => $16
-- 1000 datapoints of 1h  ............... 40 days => $36
-- 1000 datapoints of 4h  ............... 160 days (5.3 months) => $75 
-
--->
