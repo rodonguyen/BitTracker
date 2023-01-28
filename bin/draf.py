@@ -1,24 +1,24 @@
-import heapq
+def minFlipsMonoIncr(s: str) -> int:
+        
+        oneFreq, zeroFreq = 0, 0
+        oneSeen, zeroSeen = 0, 0
 
-# lll = [2,5,2,8,3,7,9,3,2,99]
-# new = []
+        for i in range(len(s)):
+            if s[i] == '1':
+                oneFreq += 1
+            if s[i] == '0':
+                zeroFreq += 1
+                
+        minCost = zeroFreq
+        for i in range(len(s)):
+            if s[i] == '1':
+                oneSeen += 1
+            if s[i] == '0':
+                zeroSeen += 1
+            cost = (zeroFreq - zeroSeen) + oneSeen
+            if cost < minCost:
+                minCost = cost
 
-# for i in lll:
-#   heapq.heappush(new, i)
-#   heapq.heapify(new)
-#   print(new)
+        return minCost
 
-# heapq.heapreplace(new, 5)
-# print(new)
-
-
-# print(new)
-
-# heapq.heapify(lll)
-# m = heapq.nsmallest(7, lll)
-
-# print(m)
-# print(sorted(lll))
-
-
-print()
+print(minFlipsMonoIncr('0101100011'))
