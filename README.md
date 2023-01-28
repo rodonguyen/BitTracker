@@ -7,9 +7,20 @@ At its core, the Supertrend calculates an upperbound and lower bound and use the
 However, it's not efficient during sideway + volatile period. Therefore, you can consider to turn the bot off for time like this.
 
 Here is a demo screenshot of Supertrend Indicator in TradingView. `Buy` is placed at the end of red line and `Sell` is placed at the end of green line.  
-![Screenshot](/media/Screenshot.png)
+![tradingview-supertrend](/media/tradingview-supertrend.png)
 
-Code modified from https://www.youtube.com/watch?v=1PEyddA1y5E
+Code modified from youtube. com/ watch?v=1PEyddA1y5E
+
+
+
+## [Analysis code 🔗](sandbox/analyse_backtest_result.ipynb)
+
+## [Blogs 🔗](https://rodonguyen.medium.com/)
+
+I'm in the process of writing blogs to share about BitTracker, you can read it here: [A Trading Bot for Cryptocurrency - BitTracker (P.1)](https://rodonguyen.medium.com/a-trading-bot-for-cryptocurrency-bittracker-p-1-f0c211134c47)
+
+[![blog](/media/blog-screenshot.png)](https://rodonguyen.medium.com/a-trading-bot-for-cryptocurrency-bittracker-p-1-f0c211134c47)
+
 
 ## Dependencies
 - Pandas
@@ -22,7 +33,27 @@ Class SupertrendBot (`supertrend.py`) is used to initiate bot's configuration an
 An example of a bot is [`bot_matic.py`](/bot_matic.py).
 
 
-# Roadmap
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<hr>
+<hr>
+<hr>
+<br>
+
+
+# Below is just my personal notes
+
+## Roadmap
 
 Week 1 (04/07)
 - Write buy/sell logic: Create TP mechanism for Supertrend - Done
